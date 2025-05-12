@@ -12,7 +12,26 @@ screen = pygame.display.set_mode((Width, Height))
 pygame.display.set_caption("My Game")  
 clock = pygame.time.Clock()
 
-running = True;
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50, 50))
+        self.image.fill((0, 255, 0))  # 填充顏色
+        self.rect = self.image.get_rect()
+        self.rect.center = (Width // 2, Height // 2)  # 設置初始位置
+    def update(self):
+        self.rect.x += 2  # 每次更新位置
+        if self.rect.x > Width:
+            self.rect.x = 0  # 如果超出邊界，重置位置
+all_sprites = pygame.sprite.Group()
+player = Player()
+all_sprites.add(player)
+    
+
+running = True
+
+
+
 
 
 # 遊戲迴圈
@@ -21,8 +40,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    all_sprites.update()  # 更新所有精靈的位置
 
     screen.fill(White);
+    all_sprites.draw(screen)
     pygame.display.update();  
 
 pygame.quit()
