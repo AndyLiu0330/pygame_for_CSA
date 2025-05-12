@@ -6,7 +6,7 @@ pygame.init()
 # 设置窗口大小
 FPS = 60;
 White = (255, 255, 255)  
-Width = 800
+Width = 500
 Height = 600
 screen = pygame.display.set_mode((Width, Height))
 pygame.display.set_caption("My Game")  
@@ -19,10 +19,20 @@ class Player(pygame.sprite.Sprite):
         self.image.fill((0, 255, 0))  # 填充顏色
         self.rect = self.image.get_rect()
         self.rect.center = (Width // 2, Height // 2)  # 設置初始位置
+        self.speedx = 8
     def update(self):
-        self.rect.x += 2  # 每次更新位置
-        if self.rect.x > Width:
-            self.rect.x = 0  # 如果超出邊界，重置位置
+        key_pressed = pygame.key.get_pressed()
+        
+        if key_pressed[pygame.K_d]:
+            self.rect.x += self.speedx
+        if key_pressed[pygame.K_a]:
+            self.rect.x -= self.speedx
+       
+        if self.rect.right > Width:
+            self.rect.right = Width 
+        if self.rect.x < 0:
+            self.rect.x = 0
+
 all_sprites = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
