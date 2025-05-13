@@ -1,6 +1,6 @@
 import pygame
 import random
-
+import os 
 # 初始化
 pygame.init()
 
@@ -12,6 +12,10 @@ Height = 600
 screen = pygame.display.set_mode((Width, Height))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
+
+
+# 載入圖片
+backgroundImg = pygame.image.load(os.path.join("img", "background.png")).convert()
 
 # 玩家類
 class Player(pygame.sprite.Sprite):
@@ -115,6 +119,7 @@ while running:
 
 
     screen.fill(White)
+    screen.blit(backgroundImg, (0, 0))
     all_sprites.draw(screen)
     pygame.display.update()
 
