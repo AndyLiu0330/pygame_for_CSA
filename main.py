@@ -9,6 +9,7 @@ FPS = 60
 White = (0,0, 0)
 Width = 500
 Height = 600
+score = 0
 screen = pygame.display.set_mode((Width, Height))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
@@ -22,6 +23,14 @@ bulletImg = pygame.image.load(os.path.join("img", "bullet.png")).convert()
 rockImgs = []
 for i in range(7):
     rockImgs.append(pygame.image.load(os.path.join("img",f"rock{i}.png")).convert())
+fontName = pygame.font.match_font("arial")
+def draw_text(surf, text, size, x, y):
+    font = pygame.font.Font(fontName, size)
+    text_surface = font.render(text, True, (255, 255, 255))
+    text_rect = text_surface.get_rect()
+    text_rect.centerx = x
+    text_rect.top = y
+    surf.blit(text_surface, text_rect)
 
 # 玩家類
 class Player(pygame.sprite.Sprite):
@@ -75,11 +84,12 @@ class Rock(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.imageO = random.choice(rockImgs)
         self.image = self.imageO.copy()
-        self.imageO.set_colorkey(White)a
+        self.image.set_colorkey(White)
+        
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(0, Width - 30)
         self.rect.y = random.randrange(-180,  -100)
-        self.radius = self.rect.width *0.9// 2
+        self.radius = int (self.rect.width *0.9// 2)
         self.speedy = random.randrange(2, 10)
         self.speedx = random.randrange(-3, 3)
         self.totalDegree = 0
@@ -134,6 +144,7 @@ while running:
     all_sprites.update()
     hits = pygame.sprite.groupcollide(rocks, bullets, True, True)
     for hit in hits:
+        score += hit.radius
         rock = Rock()
         all_sprites.add(rock)
         rocks.add(rock)
@@ -146,6 +157,7 @@ while running:
     screen.fill(White)
     screen.blit(backgroundImg, (0, 0))
     all_sprites.draw(screen)
+    draw_text(screen, str(score), 18, Width // 2, 10)
     pygame.display.update()
 
 pygame.quit()
