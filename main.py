@@ -16,13 +16,17 @@ clock = pygame.time.Clock()
 
 # 載入圖片
 backgroundImg = pygame.image.load(os.path.join("img", "background.png")).convert()
+playerImg = pygame.image.load(os.path.join("img", "player.png")).convert()
+rockImg = pygame.image.load(os.path.join("img", "rock.png")).convert()
+bulletImg = pygame.image.load(os.path.join("img", "bullet.png")).convert()
 
 # 玩家類
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill((0, 255, 0))
+        self.image =pygame.transform.scale (playerImg, (50, 38))
+        self.image.set_colorkey(White)
+      
         self.rect = self.image.get_rect()
         self.rect.x = Width // 2
         self.rect.bottom = Height - 10
@@ -48,8 +52,8 @@ class Player(pygame.sprite.Sprite):
     class Bullet(pygame.sprite.Sprite):
         def __init__(self, x, y):
             pygame.sprite.Sprite.__init__(self)
-            self.image = pygame.Surface((10, 20))
-            self.image.fill((0, 0, 255))
+            self.image = bulletImg
+            self.image.set_colorkey(White)
             self.rect = self.image.get_rect()
             self.rect.centerx = x
             self.rect.y = y
@@ -60,12 +64,12 @@ class Player(pygame.sprite.Sprite):
             if self.rect.bottom < 0:
                 self.kill()
 
-# 石頭類
+# 石頭類  
 class Rock(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((30, 40))
-        self.image.fill((255, 0, 0))
+        self.image = rockImg
+        self.image.set_colorkey(White)
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(0, Width - 30)
         self.rect.y = random.randrange(-100, Height - 40)
@@ -100,8 +104,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
                 player.shoot()
 
 
