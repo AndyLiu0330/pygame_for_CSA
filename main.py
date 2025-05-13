@@ -19,6 +19,9 @@ backgroundImg = pygame.image.load(os.path.join("img", "background.png")).convert
 playerImg = pygame.image.load(os.path.join("img", "player.png")).convert()
 rockImg = pygame.image.load(os.path.join("img", "rock.png")).convert()
 bulletImg = pygame.image.load(os.path.join("img", "bullet.png")).convert()
+rockImgs = []
+for i in range(7):
+    rockImgs.append(pygame.image.load(os.path.join("img",f"rock{i}.png")).convert())
 
 # 玩家類
 class Player(pygame.sprite.Sprite):
@@ -30,6 +33,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = Width // 2
         self.rect.bottom = Height - 10
+        self.radius = self.rect.width *0.9 // 2
+
         self.speedx = 8
 
     def update(self):
@@ -68,20 +73,36 @@ class Player(pygame.sprite.Sprite):
 class Rock(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = rockImg
-        self.image.set_colorkey(White)
+        self.imageO = random.choice(rockImgs)
+        self.image = self.imageO.copy()
+        self.imageO.set_colorkey(White)a
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(0, Width - 30)
-        self.rect.y = random.randrange(-100, Height - 40)
+        self.rect.y = random.randrange(-180,  -100)
+        self.radius = self.rect.width *0.9// 2
         self.speedy = random.randrange(2, 10)
         self.speedx = random.randrange(-3, 3)
+        self.totalDegree = 0
+        self.degree = random.randrange(-3, 3)
 
+
+    def rotate(self):
+        self.totalDegree += self.degree
+        self.totalDegree = self.totalDegree %360
+        self.image = pygame.transform.rotate(self.imageO, self.degree)
+        center = self.rect.center
+        self.rect = self.image.get_rect()
+        self.rent.center = center
+        
+        
+        
     def update(self):
+    
         self.rect.y += self.speedy
         self.rect.x += self.speedx
         if self.rect.top > Height or self.rect.left < 0 or self.rect.right > Width:
             self.rect.x = random.randrange(0, Width - 30)
-            self.rect.y = random.randrange(-100, Height - 40)
+            self.rect.y = random.randrange(-180,  -100)
             self.speedy = random.randrange(2, 10)
             self.speedx = random.randrange(-3, 3)
 
@@ -117,7 +138,7 @@ while running:
         all_sprites.add(rock)
         rocks.add(rock)
     
-    hits = pygame.sprite.spritecollide(player, rocks, False)
+    hits = pygame.sprite.spritecollide(player, rocks, False, pygame.sprite.collide_circle)
     if hits:
         running = False        
 
